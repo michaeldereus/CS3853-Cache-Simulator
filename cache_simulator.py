@@ -93,6 +93,7 @@ def output(parser):
     print("Cache Simulator - CS 3853 - Instructor Version: 2.02"+"\n")
 
     for tfile in file_list:
+        # output parameters that were input
         print()                                                                              
         print("Trace File:\t"+tfile)
         print()
@@ -103,8 +104,10 @@ def output(parser):
         print("Associativity:\t\t\t"+str(args.a))
         print("Replacement Policy:\t\t"+args.r)
 
+        # calculate cache values
         total_blocks, tag_size, index_size, total_rows, overhead_size, imp_memory, imp_memory_bytes, cost = calculate_cache_values(tfile, args.s, args.b, args.a, args.r, args.p)
         
+        # print calculated values
         print()
         print("***** Cache Calculated Values *****")
         print()
@@ -117,6 +120,7 @@ def output(parser):
         print("Cost:\t\t\t\t$"+str(cost))
         print()
 
+        # read through trace file
         parse_trace_file(tfile)
     
     return 1
@@ -124,4 +128,3 @@ def output(parser):
 if output(parser) == 0:
     print("fatal error")
     exit()   
-# %%
