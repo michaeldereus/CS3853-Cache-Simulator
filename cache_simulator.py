@@ -1,5 +1,5 @@
 # %%
-from math import log
+from math import log, trunc
 import argparse
 from fileinput import input
 
@@ -9,25 +9,21 @@ parser = argparse.ArgumentParser(description='Simulating the virtual memory of a
 
 # -s cache size in KB
 parser.add_argument('-s',   type=int, help='Cache size in KB [1 KB to 8 MB]')
-
 # -b block size in bytes
 parser.add_argument('-b',   type=int, help='Block size [4 bytes to 64 bytes]')
-
 # -a associativity
 parser.add_argument('-a',   type=int, help='1, 2, 4, 8, or 16')
-
 # -r replacement policy
 parser.add_argument('-r',   type=str, help='Replacement policy [RR or RND]')
-
 # -p physical memory in KB
 parser.add_argument('-p',   type=int, help='Physical memory in KB [64 KB to 512 GB]')
- 
 # -f trace file
 #   Not definable in argparse because the assingment requires multiple file inputs. Argparse can do that, but each file needs to have a 
 #   -f in front of it and argparse doesn't like that format, instead we use the "other" variable to parse this argument inside of output()
 
 kb_to_byte = lambda kb_val : int(kb_val*1024)
 byte_to_kb = lambda byte_val : int(byte_val/1024)
+
 
 def parse_trace_file(trace_file):
     with input(trace_file) as tfile:
@@ -38,7 +34,7 @@ def parse_trace_file(trace_file):
 
             if line_array[0] == "EIP":
                 address = str(line_array[2])
-                read_length = "xxxx" # ?????
+                read_length = str(line_array[1])[1:3]
 
                 if i<20:
                     print(f"0x{address}: {read_length}")
@@ -48,7 +44,6 @@ def parse_trace_file(trace_file):
     return 0
 
 
-# %%
 def calculate_cache_values(trace_file, cache_size, block_size, associativity, rep_policy, phys_mem):
     # tfile open and read
     # . . .
@@ -99,8 +94,8 @@ def output(parser):
         print()
         print("***** Cache Input Parameters *****")
         print()
-        print("Cache Size:\t\t\t"+str(args.s)+" KB")
-        print("Block Size:\t\t\t"+str(args.b)+" bytes")
+        print("Cache Size:\t\t\t\t"+str(args.s)+" KB")
+        print("Block Size:\t\t\t\t"+str(args.b)+" bytes")
         print("Associativity:\t\t\t"+str(args.a))
         print("Replacement Policy:\t\t"+args.r)
 
@@ -112,13 +107,12 @@ def output(parser):
         print("***** Cache Calculated Values *****")
         print()
         print("Total Blocks:\t\t\t"+str(total_blocks))
-        print("Tag Size:\t\t\t"+str(tag_size)+" bits")
-        print("Index Size:\t\t\t"+str(index_size)+" bits")
-        print("Total Rows:\t\t\t"+str(total_rows))
+        print("Tag Size:\t\t\t\t"+str(tag_size)+" bits")
+        print("Index Size:\t\t\t\t"+str(index_size)+" bits")
+        print("Total Rows:\t\t\t\t"+str(total_rows))
         print("Overhead Size:\t\t\t"+str(overhead_size)+" bytes")
-        print("Implementation Memory Size:\t"+str(imp_memory)+" KB ("+str(imp_memory_bytes)+" bytes)")
-        print("Cost:\t\t\t\t$"+str(cost))
-        print()
+        print("Implementation Memory:\t"+str(imp_memory)+" KB ("+str(imp_memory_bytes)+" bytes)")
+        print("Cost:\t\t\t\t\t$"+str(round(cost, 2))+"\n")
 
         # read through trace file
         parse_trace_file(tfile)
