@@ -21,6 +21,7 @@ parser.add_argument('-p',   type=int, help='Physical memory in KB [64 KB to 512 
 #   Not definable in argparse because the assingment requires multiple file inputs. Argparse can do that, but each file needs to have a 
 #   -f in front of it and argparse doesn't like that format, instead we use the "other" variable to parse this argument inside of output()
 
+
 kb_to_byte = lambda kb_val : int(kb_val*1024)
 byte_to_kb = lambda byte_val : int(byte_val/1024)
 
