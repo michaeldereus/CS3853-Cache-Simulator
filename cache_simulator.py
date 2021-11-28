@@ -24,23 +24,27 @@ parser.add_argument('-p',   type=int, help='Physical memory in KB [64 KB to 512 
 kb_to_byte = lambda kb_val : int(kb_val*1024)
 byte_to_kb = lambda byte_val : int(byte_val/1024)
 
-
+# parse through trace files
 def parse_trace_file(trace_file):
+    # open file
     with input(trace_file) as tfile:
         i = 0
+        # parsing lines
         for line in tfile:
             line_array = line.split(" ")
             # print(line_array)
 
+            # only lines we care about are the ones that begin with EIP
             if line_array[0] == "EIP":
                 address = str(line_array[2])
                 read_length = str(line_array[1])[1:3]
 
-                if i<20:
-                    print(f"0x{address}: {read_length}")
-                    i+=1
-                else:
-                    return 1
+                # printing address and len
+                # if i<20:
+                #     print(f"0x{address}: {read_length}")
+                #     i+=1
+                # else:
+                #     return 1
     return 0
 
 
@@ -65,7 +69,7 @@ def calculate_cache_values(trace_file, cache_size, block_size, associativity, re
 
 def output(parser):
     # define parser
-    #   - Arguments that are defined above go into "args"
+    #   - Arguments that are defined above go into "args" below
     #   - Arguments that are not defined above go into "other"
     #       - If the command line input is corectly formatted, only -f should be in "other"
 
